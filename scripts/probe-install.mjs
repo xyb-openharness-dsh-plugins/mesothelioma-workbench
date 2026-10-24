@@ -39,9 +39,24 @@ const PAGES = (process.env.MPM_RESP_PAGES
 
 const DEFAULT_PKG = join(
   homedir(),
-  'Library/Application Support/dsh-desktop/harness/profiles/web/node_modules/@xyb-community/attr-workbench',
+  'Library/Application Support/dsh-desktop/harness/profiles/web/node_modules/@xyb-community/mesothelioma-workbench',
 )
 const PKG = process.env.MPM_PKG || DEFAULT_PKG
+
+/* 本文件是照 ATTR 的探针改的，里面还有不少属性、接口前缀、页面路由是 ATTR 的。
+   指错包时的表现最坏：满屏红条却全是假失败（2026-10-24 实测：默认指到 attr-workbench，
+   于是 20 条断言连 404 都算进去）。所以先卡一道身份闸——指错了就直接说明白，
+   不给一份看起来"很严重"的假报告。适配清单见 docs/PROGRESS-REPORT-PROMPT.md 的 M9 挂账。 */
+try {
+  const pkgJson = JSON.parse(readFileSync(join(PKG, 'package.json'), 'utf8'))
+  if (pkgJson.name !== '@xyb-community/mesothelioma-workbench') {
+    console.error(`✗ 探针指向了别的包：${pkgJson.name || '（无 name）'}\n  PKG=${PKG}\n  → 本探针尚未完全适配本包，不能拿它当装机验收结论。`)
+    process.exit(1)
+  }
+} catch (error) {
+  console.error(`✗ 读不到装机副本：${PKG}（${error.code || error.message}）`)
+  process.exit(1)
+}
 
 const checks = []
 const fails = []

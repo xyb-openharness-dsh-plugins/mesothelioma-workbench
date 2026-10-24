@@ -10,9 +10,10 @@ import { homedir } from 'node:os';
 import { existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { after, test } from 'node:test';
+import { createServer } from 'node:http';
 import { Workbench, validateWorkspacePath } from '../dsh/workbench.js';
 import { startWorkbenchServer } from '../dsh/server.js';
-import { API_PREFIX, UI_PREFIX } from '../dsh/routes.js';
+import { API_PREFIX, UI_PREFIX, createApiHandler } from '../dsh/routes.js';
 import { DB_FILE } from '../dsh/workbench.js';
 
 const tmp = mkdtempSync(join(homedir(), '.xyb-mpm-server-'));
@@ -231,4 +232,45 @@ test('⑫ 密钥文件坏了要报出来，不当作"未配置"静默覆盖', as
       assert.equal(readFileSync(file, 'utf8'), '{ broken json', '坏文件不能被静默覆盖');
     });
   });
+});
+
+test('⑬ failure 传函数：数据源自愈后 /health 与 503 立即跟着变（不锁死到进程生命周期）', async () => {
+  /* 这个用例盯 0.1.4 的改法：宿主进程常在装包之前启动，插件若把"打不开"定死成构造时的
+     一个字符串，用户装好新包、只重开工作台时看到的永远是同一句错。传函数才能按请求求值。 */
+  let reason = '打不开数据库：/tmp/nowhere/xyb.sqlite';
+  const source = {
+    db: null,
+    bootstrap: () => ({ ok: true, profiles: [] }),
+    profile: () => null,
+  };
+  const handler = createApiHandler({
+    source,
+    version: 'test',
+    build: 'test',
+    serveUi: () => false,
+    failure: () => reason,
+  });
+
+  const server = createServer((req, res) => { handler(req, res).catch(() => { res.writeHead(500); res.end(); }); });
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const bad = await (await fetch(`${base}${API_PREFIX}/health`)).json();
+    assert.equal(bad.ok, false, '数据源不可用时应如实报');
+    assert.match(bad.error, /打不开数据库/);
+
+    const blocked = await fetch(`${base}${API_PREFIX}/bootstrap`);
+    assert.equal(blocked.status, 503, '不可用时业务接口统一 503，不假装返回空数据');
+    assert.match((await blocked.json()).message, /打不开数据库/);
+
+    reason = null; // 排障完成：数据源恢复
+    const good = await (await fetch(`${base}${API_PREFIX}/health`)).json();
+    assert.equal(good.ok, true, '/health 必须按请求重新取值，不能停在构造时的那一句');
+    assert.equal(good.error, undefined);
+
+    const passed = await fetch(`${base}${API_PREFIX}/bootstrap`);
+    assert.equal(passed.status, 200, '自愈后业务接口应恢复，不必重启宿主');
+  } finally {
+    await new Promise((r) => server.close(r));
+  }
 });
