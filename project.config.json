@@ -1,0 +1,18 @@
+{
+  "packageName": "@xyb-community/mesothelioma-workbench",
+  "title": "恶性胸膜间皮瘤患者工作台",
+  "repository": "https://github.com/xyb-openharness-dsh-plugins/mesothelioma-workbench",
+  "description": "面向恶性胸膜间皮瘤患者与照护者的本机病程资料、石棉暴露与职业史档案、胸水管理、治疗历程、指标趋势与医患沟通工作台设计项目",
+  "slug": "mesothelioma-workbench",
+  "layoutMode": "business-first",
+  "businessWidth": 0.65,
+  "targetUsers": "恶性胸膜间皮瘤（MPM）患者与照护者家属双主体；覆盖疑似就诊弯路、确诊（胸膜活检/病理三型）、化疗或免疫治疗、胸水反复管理与随访、照护决策与职业赔偿材料整理全程；支持代记与私密内容分级",
+  "scenario": "患者与照护者整理石棉暴露史、胸膜活检病理与分子检测（上皮样/肉瘤样/双相、BAP1/SMARCB1）、CT 随访（modified RECIST 语境）、化疗/免疫治疗周期、胸穿引流与胸膜固定术记录、血象与 mMRC 呼吸困难分级材料，追踪治疗与不良反应，准备复诊问题并回顾医生确认后的记录",
+  "coreFlow": [
+    "选择本地资料目录并导入或登记职业暴露史、胸水事件、病理分子、影像与治疗材料",
+    "核对病理三型与分子三态（未检测不等于阴性）、治疗周期、胸水事件与 mMRC 分级等记录",
+    "查看时间轴与趋势，标记症状与待办，生成复诊摘要与问题清单，整理职业病诊断材料清单",
+    "照护者以代记身份记录就诊弯路与照护决策线索，私密内容分级管理，并把明确任务交给 Desktop 原生 Agent 会话"
+  ],
+  "completion": "患者与照护者确认的资料和治疗时间轴、可追溯的指标趋势、胸水与症状记录、复诊问题摘要与职业赔偿材料清单均保存在明确选择的本机资料目录中；私密内容按 visibility 分级且三处出口过滤"
+}

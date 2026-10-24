@@ -1,0 +1,8 @@
+- insert:
+    - id: mesothelioma-workbench-main
+      name: "@xyb-community/mesothelioma-workbench"
+      config:
+        root: !!js dshHomePath('mesothelioma-workbench')
+# 说明（本仓库 checker 以文件首字符为 `- insert:` 判定，注释一律放条目之后）：
+# 1. name 必须写 npm 包名；空 patch 写 `[]`。
+# 2. config.root 由宿主 dshHomePath 分配用户数据目录（GBM 踩1 教训：缺它服务起不来）。
