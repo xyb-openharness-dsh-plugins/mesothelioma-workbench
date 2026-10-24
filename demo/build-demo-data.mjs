@@ -3,8 +3,11 @@
  * build-demo-data.mjs — 演示数据唯一来源（PROTOTYPE-BRIEF §1）
  *
  * 被 import 时只返回 buildDemoProfiles() 纯数据，不碰磁盘；
- * 直接运行时写 prototypes/v0.2/demo-data.js（M2 原型直开用，禁止手改）。
- * demo/demo-data.sqlite 在 G3 冻结 schema 后由本脚本同一数据源产出（M3，见 DEV-PLAN）。
+ * 直接运行时写三个产物（M3/M5）：
+ *   ① prototypes/v0.2/demo-data.js —— 原型 file:// 直开用（冻结快照，禁止手改）；
+ *   ② public/demo-data.js —— 开发版离线回退（window.DEMO_DATA，与 ① 同一份数据）；
+ *   ③ demo/demo-data.sqlite —— G3 冻结 schema（0001+0002 全部执行）后由 dsh/demo.js 的
+ *      seedDemo 同一实现播种（动态 import 防循环依赖；唯一播种路径）。
  *
  * 两套档案 × 6 个月窗口（2026-04-24 → 2026-10-24）：
  *   DEMO-1 王建国（演示）62 男 · 新诊断路径：弯路（抗结核 3 个月）→ 胸膜活检上皮样型 →
@@ -21,7 +24,7 @@
  *      （excerpt/src 类）；无 PROTOTYPE-BRIEF §6 禁词表七族词；材料相关文案零法律建议。
  */
 
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -461,15 +464,33 @@ function finalize() {
 }
 
 /**
- * 直接运行时写产物：prototypes/v0.2/demo-data.js（原型 file:// 直开用）。
- * demo/demo-data.sqlite 留待 G3 冻结 schema 后由同一数据源产出（M3）。
+ * 直接运行时写产物：① prototypes/v0.2/demo-data.js（原型直开）；
+ * ② public/demo-data.js（开发版离线回退）；③ demo/demo-data.sqlite（同源播种）。
  */
 if (process.argv[1] && process.argv[1].endsWith('build-demo-data.mjs')) {
   const data = finalize();
   mkdirSync(dirname(OUT), { recursive: true });
   const js = `// 由 demo/build-demo-data.mjs 生成——唯一数据源，勿手改（PROTOTYPE-BRIEF §1）\nconst DEMO_DATA = ${JSON.stringify(data, null, 2)};\n`;
   writeFileSync(OUT, js + `if (typeof module !== 'undefined') module.exports = DEMO_DATA;\n`);
+  /* ② 开发版离线回退：同一份数据，挂到 window 上（public/app.js 在 API 不通时回退到它）。 */
+  const publicDir = join(ROOT, 'public');
+  mkdirSync(publicDir, { recursive: true });
+  writeFileSync(join(publicDir, 'demo-data.js'),
+    '/* 由 demo/build-demo-data.mjs 生成；勿手改，改数据请改生成器后重新运行。 */\n'
+    + `window.DEMO_DATA = ${JSON.stringify(data)};\n`);
+  /* ③ sqlite：schema/00*.sql 全部迁移（0001 冻结 + 0002 增量）+ dsh/demo.js 的 seedDemo
+     ——与开发版启动时同一条播种路径。用子进程隔离（本脚本带顶层 await，直接 import
+     dsh/demo.js 会形成 TLA 循环等待死锁；见 demo/seed-demo-sqlite.mjs 头注）。 */
+  const { execFileSync } = await import('node:child_process');
+  const { readdirSync, rmSync } = await import('node:fs');
+  const schemaDir = join(ROOT, 'schema');
+  const sqlitePath = join(ROOT, 'demo', 'demo-data.sqlite');
+  rmSync(sqlitePath, { force: true });
+  execFileSync(process.execPath, [join(ROOT, 'demo', 'seed-demo-sqlite.mjs'), sqlitePath], { stdio: 'inherit' });
+  const executed = readdirSync(schemaDir).filter((f) => f.endsWith('.sql')).sort();
   console.log(`demo-data.js → ${OUT}（profiles=${data.profiles.length}）`);
+  console.log(`public/demo-data.js → ${join(publicDir, 'demo-data.js')}（window.DEMO_DATA）`);
+  console.log(`demo/demo-data.sqlite → ${sqlitePath}（迁移 ${executed.join(' + ')} + seedDemo 播种）`);
 }
 
 export { buildDemoProfiles, finalize };

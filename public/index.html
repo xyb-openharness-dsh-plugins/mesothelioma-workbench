@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>小胸宝 PleuraPal · 恶性胸膜间皮瘤工作台 v0.1.1</title>
+<!-- 内联 favicon：开发页既可能走 http，也可能被直接打开，不给 favicon 会留一条 404 -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2333608C'/%3E%3Ctext x='16' y='23' font-size='19' font-family='PingFang SC,Helvetica,sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E%E8%83%B8%3C/text%3E%3C/svg%3E">
+<meta name="description" content="恶性胸膜间皮瘤（MPM）患者与照护者工作台开发版。资料只在本机，判读归呼吸与影像团队。">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<div class="workspace">
+  <aside class="sidebar" aria-label="小胸宝业务导航">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#E9F1F7"/><path d="M24 9c-6 5-9 10-9 15a9 9 0 0 0 18 0c0-5-3-10-9-15Z" fill="#33608C"/><path d="M24 13v20M17 22h14" stroke="#E9F1F7" stroke-width="2.2" stroke-linecap="round"/><circle cx="37" cy="12" r="2.6" fill="#E8590C"/><circle cx="10.5" cy="36" r="1.7" fill="#7C99A8"/></svg>
+    </span><div><strong>小胸宝</strong><span>PleuraPal · mesothelioma</span></div></div>
+    <button class="profile profile-btn" id="profile-btn" data-action="profiles" aria-label="切换档案">
+      <div class="avatar" id="profile-avatar" aria-hidden="true">—</div>
+      <div><b id="profile-name">资料载入中…</b><span id="profile-meta">正在读取本机资料</span></div>
+      <span class="profile-caret" aria-hidden="true">⌄</span>
+    </button>
+    <nav id="nav" aria-label="一级导航"></nav>
+    <div class="sidebar-bottom"><span class="eyebrow">小 X 宝家族</span><p>一步一记录，<br>复诊有据可查。</p><button class="text-button" data-action="help">使用说明 ↗</button></div>
+  </aside>
+  <div class="stage">
+    <div class="work-area">
+      <header class="topbar">
+        <div class="breadcrumb">小胸宝工作台 <span>/</span> <b id="breadcrumb">看板</b></div>
+        <div class="top-actions">
+          <button class="status" id="ready-store" data-action="open-store" aria-label="资料目录状态"><i></i><span>资料目录</span><b>连接中</b></button>
+          <button data-action="settings" aria-label="打开设置：工作区目录、文档解析、临床数据包">设置</button>
+          <button id="font-toggle" aria-pressed="false" title="切换大字">大字 Aa</button>
+          <button id="agent-toggle" data-action="agent-toggle" aria-expanded="false" aria-controls="agent-pane">AI 对话</button>
+          <button class="ver-chip" id="ver-chip" data-action="about" aria-label="关于小胸宝：查看版本号与构建信息">v0.1.1</button>
+        </div>
+      </header>
+      <main id="main" tabindex="-1"></main>
+      <footer class="footer">小胸宝 PleuraPal · 与恶性胸膜间皮瘤患者和照护者一起整理、记录、准备沟通 · 判读归呼吸与影像团队 <span class="ver-line"><b id="app-version">v0.1.1</b><em id="app-build">2026-10-24</em></span></footer>
+    </div>
+    <div id="agent-splitter" role="separator" aria-orientation="vertical" aria-label="调整 AI 对话面板宽度（左右方向键步进）" aria-valuemin="25" aria-valuemax="45" aria-valuenow="35" tabindex="0" hidden></div>
+    <aside id="agent-pane" aria-label="AI 对话面板" hidden>
+      <div class="agent-head">
+        <span id="agent-label" class="agent-label">AI 对话</span>
+        <button id="agent-hide" class="icon-button" data-action="agent-hide" aria-label="收起 AI 对话">×</button>
+      </div>
+      <div class="agent-body">
+        <div class="notice plain">AI 对话由宿主提供，与业务区分栏并列。私密记录（visibility=private）默认不进入 AI 上下文，需要带入时逐条显式勾选。</div>
+        <p class="small-note">本工作台只做资料整理与沟通准备，不给判断、不给结论；判读归呼吸与影像团队。</p>
+      </div>
+      <div class="agent-foot"><input placeholder="在右侧宿主会话里输入" disabled aria-label="输入框由宿主会话提供"></div>
+    </aside>
+  </div>
+</div>
+<dialog id="dialog" aria-labelledby="dialog-title">
+  <div class="dialog-head"><div><span class="eyebrow" id="dialog-eyebrow">小胸宝</span><h2 id="dialog-title"></h2></div><button class="icon-button" data-action="close" aria-label="关闭弹窗">×</button></div>
+  <div id="dialog-body" class="dialog-body"></div>
+  <div id="dialog-foot" class="dialog-foot"></div>
+</dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="demo-data.js"></script>
+<script src="app.js"></script>
+</body></html>
