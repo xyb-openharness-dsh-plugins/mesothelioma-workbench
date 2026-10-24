@@ -2,6 +2,14 @@
 
 只增不删；每条写清"改了什么 + 为什么 + 用户可见结果"。版本号与 VERSION、package.json 三处必须一致。
 
+## 0.1.2 — 2026-10-24
+
+- **修复：装机首次打开报 `打不开数据库`**。宿主的 `dshHomePath` 只拼路径、不建目录，全新机器上
+  `harness/mesothelioma-workbench/` 那一层不存在，SQLite 在不存在的目录里建不了文件。
+  → `dsh/index.js` 开库前 `mkdirSync(dir, { recursive: true })`，失败时报清路径与 `error.code`。
+  与小甲宝 ATTR 0.3.0 同一缺陷（那台是真机踩到的，见 attr-workbench CHANGELOG）。
+- 验证：`npm run check` 全绿（单测 43 全过），audit 37/37。真机装机待确认。
+
 ## 0.1.1 — 2026-10-24
 
 开发版本（beta · 数据仅在本机）。**尚未装机实测**，Desktop 侧 V2/V3 待用户真机确认。

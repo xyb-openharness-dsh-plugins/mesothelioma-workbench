@@ -17,6 +17,7 @@
  * 「装进 Desktop」用的是同一份前端，不需要两套构建。
  */
 import Schema from '@deepseek-ai/schemastery'
+import { mkdirSync } from 'node:fs'
 import { openDatabase, migrate, close } from './store.js'
 import { seedDemo, hasDemoData } from './demo.js'
 import { bootstrap, getProfile } from './readmodels.js'
@@ -45,6 +46,16 @@ function sendJson(res, status, body) {
 function openDataSource(root) {
   // 没配资料目录：内存库 + 演示数据。只读演示，不落盘，不会在用户机器上留文件。
   const file = root ? `${root.replace(/\/+$/, '')}/xyb-mesothelioma.sqlite` : ':memory:'
+  /* 宿主的 dshHomePath 只**拼路径**，不会建目录：`harness/mesothelioma-workbench/` 在全新机器上
+     并不存在，SQLite 在不存在的目录里建不了文件，界面会报「打不开数据库」
+     （小甲宝 0.2.3 装机原样踩过，2026-10-24）。开库前 recursive 建一次。 */
+  if (root) {
+    try {
+      mkdirSync(file.slice(0, file.lastIndexOf('/')), { recursive: true })
+    } catch (error) {
+      throw new Error(`建不了资料目录：${file}（${error.code || error.message}）`)
+    }
+  }
   const db = openDatabase(file)
   migrate(db)
   if (!hasDemoData(db)) seedDemo(db)
