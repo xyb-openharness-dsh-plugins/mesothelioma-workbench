@@ -31,7 +31,7 @@
 
 ## 4. 功能范围（10 线 30 页签，G1 签认对象）
 
-全量见 DIFF-MATRIX §二与 family-landscape §6.1/§6.2。功能 ID：F-DASH / F-TUMOR（含弯路）/ F-ASBESTOS（石棉与材料）/ F-TX（治疗档案）/ F-PEX（胸水与呼吸）/ F-LAB（血象与指标）/ F-CT（随访影像）/ F-CHART（病情一图秀）/ F-CARE（照护与生活）/ F-FU（复诊与资料 5 子页）/ F-SET（设置弹窗三页签）。
+全量见 DIFF-MATRIX §二与 family-landscape §6.1/§6.2。功能 ID：F-DASH / F-TUMOR（含弯路）/ F-ASBESTOS（石棉与材料）/ F-TX（治疗档案）/ F-PEX（胸水与呼吸）/ F-LAB（血象与指标）/ F-CT（随访影像）/ F-CHART（病情一图秀）/ F-CARE（照护与生活，**支持资源并入 ACP 与决策页下半区，二期可升独立页签**——评审 P1-3 方案 B）/ F-FU（复诊与资料 5 子页）/ F-SET（设置弹窗三页签）。
 
 ## 5. 数据与 API（G3 冻结对象）
 
