@@ -12,7 +12,7 @@
    影像评估语（iRECIST 等）只随报告/评估原文引用出现。 */
 
 const APP_INFO = {
-  version: '0.1.2',
+  version: '0.1.3',
   build: '2026-10-24',
   channel: 'dsh',
   channelLabel: '开发版 · 已连接工作台数据',
@@ -1945,7 +1945,7 @@ async function boot() {
     console.error(error);
   }
   if (problems.length) showBootBanner(`接口基址异常（${apiBase() || '空串'}）：${problems.join('；')}——接口调用会失败，请检查挂载前缀。`);
-  else if (state.dataSource === 'demo') showBootBanner('当前是离线演示数据（未连接工作台接口）；接口可用后会自动换源，需刷新。');
+  else if (state.dataSource === 'demo') showBootBanner('当前是离线演示数据（未连接工作台接口）。新装工作台请先在左侧会话列表新建一个会话（宿主按会话授权本台接口），然后刷新。');
   else if (state.dataSource === 'empty') showBootBanner('工作台已连接，但资料库是空的。');
   document.body.setAttribute('data-booted', '1');
 }
