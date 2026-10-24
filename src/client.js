@@ -434,7 +434,14 @@
               },
               'aria-label': 'AI 对话',
               'aria-hidden': paneVisible ? undefined : 'true',
-            }, conversation ?? h('div', { style: padStyle },
+            }, conversation
+              ? h('div', { style: { position: 'relative', height: '100%', minHeight: 0 } },
+                  // 垫底引导：宿主会话节点尚未渲染内容时可见（首次使用：新建会话前后），有内容时被覆盖。
+                  h('div', { style: { ...padStyle, position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' } },
+                    h('b', null, '会话区就绪'),
+                    h('span', null, '若此处长时间空白：请在左侧会话列表新建或选择一个会话（宿主按会话授权本台接口）。')),
+                  h('div', { style: { position: 'relative', zIndex: 1, height: '100%', minHeight: 0 } }, conversation))
+              : h('div', { style: padStyle },
               h('b', null, 'AI 对话还没开始'),
               h('span', null, '点顶栏「AI 对话」调起 DSH 原生会话后，它会固定出现在这一侧。'),
               h('span', null, '没有会话也不影响记录：左侧的资料整理、指标与一图秀照常可用。'),
