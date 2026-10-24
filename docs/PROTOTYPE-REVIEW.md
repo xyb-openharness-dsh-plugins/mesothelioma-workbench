@@ -1,6 +1,7 @@
 # HTML 交互原型确认记录（PROTOTYPE-REVIEW）· v0.2
 
-状态：**已制作、已自验、独立评审中；待用户确认（G2）**。未签认前不写生产代码。
+状态：**已制作、已自验、独立评审通过（P0=0，P1×3 文档修订已于 c4d1e3e 完成）、待用户确认（G2）**。未签认前不写生产代码。
+独立评审：DESIGN-REVIEW.md（PASS 10 / WARN 3 / FAIL 0；对象 f458187；红线五条全过；引用抽查 2/2 实）。
 
 - HTML 实际路径/版本/SHA-256：`prototypes/v0.2/`，git `f458187`（2026-10-24），app.js sha256 前缀 `8e56cf6b9098679e`（138,266 字节）
 - 对应 SPEC/场景/数据模型版本：SPEC v0.1（G1 已签）+ SCENARIOS S01–S17 + INTERACTION-DESIGN v1 + schema/draft/0001
