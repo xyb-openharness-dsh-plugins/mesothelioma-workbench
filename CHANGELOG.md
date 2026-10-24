@@ -18,8 +18,16 @@
 - **版本同源修复（本轮主要改动）**：`VERSION` 升到 0.1.1，`package.json` 同步（原 0.1.1 / 0.1.0 两处不一致）；
   补 `build:version` / `check:version` / `build:client` 三个脚本并接进 `npm run check`，`lib/version.js` 由 `VERSION` 生成
   （`dsh/index.js` 直接 import 它，缺文件包根本起不来）。
-- **检查链补全**：`npm run check` 原来只做语法 + 包结构，现在串起 版本同步 → 语法 → schema 冻结 → 文案红线 → 单测 → 版本一致 → 包结构；
-  `check-schema.mjs` 修掉「哈希两侧带反引号就读不出冻结记录」的误报。
+- **检查链补全**：`npm run check` 原来只做语法 + 包结构，现在串起 版本生成 → 演示数据同源产出（demo-data.js×2 + demo/demo-data.sqlite）→
+  **build:client --check**（客户端生成物与来源同步）→ 版本一致（10 处同源）→ 语法 → schema 冻结（sha256 复算）→ 文案红线（含 M3 零法律建议词族）→
+  **列一致性**（schema 00*.sql 全执行 vs demo-data.sqlite 逐列比对）→ 单测 43 项 → 包结构；`check-schema.mjs` 修掉「哈希两侧带反引号就读不出冻结记录」的误报。
+  `check-pack.mjs` 从 tgz 内容验证宿主接线四要素（H3 占位标记=0 / H1 dsh 块 / H2 patch config.root / 版本同源）。
+- **MinerU 六部件（18 号 v2）**：`dsh/mineru.js`（v4 四步协议 + 错误分类）、`dsh/settings.js`（Token 文件优先/env 兜底，原子写 600）、
+  `dsh/mesoparse.js`（HTML 表先转竖线表再按位置对齐、单位先剥 LaTeX、不等式保留原文）、`dsh/parse.js`（事务原子、失败不产候选、重试留痕、.html 拒收）、
+  设置接口 `GET/POST /api/mesothelioma/settings/mineru` 三态、`parse_job` 任务表。
+- **实测数字（M5 验收）**：开发版无头 64 页签 × 2 档案（溢出 0 / error 0 / 4xx 0 / aria 不匹配 0，面板 35→45→25→收起→重开 25，
+  一图秀 2 条数值线 + 4 个 mMRC 节点、mMRC 连线 0）；HVT X1–X4：X1 孤儿 0（31/31）、X2 walk 26 fail 0、X3 max=1/62 页、
+  X4 候选闭环 3 键 + AI 按钮 10/10 线、jsError 0；probe:resp 8 档宽 × 10 页 80 组合 0 问题；家族一致性 audit 37/37。
 - **N/A**：本次不做发布、不推进 M8（用户 2026-10-24 决定「先不发布」）。
 
 ## 0.1.0 — 2026-10-24

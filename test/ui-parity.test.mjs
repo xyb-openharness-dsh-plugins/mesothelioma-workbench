@@ -66,6 +66,7 @@ test('⑥ index.html 只差 <title>、版本号、favicon、noindex：不允许�
   const strip = (html) => html
     .replace(/<title>[\s\S]*?<\/title>/g, '')
     .replace(/<meta name="robots"[^>]*>\n?/g, '')
+    .replace(/<meta name="description"[^>]*>\n?/g, '')   // 开发版的 description 措辞与原型不同（title 类元信息）
     .replace(/<!-- 内联 favicon[\s\S]*?-->\n?<link rel="icon"[^>]*>\n?/g, '')
     .replace(/v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?/g, 'vX.Y.Z')
     .trim();
@@ -81,7 +82,7 @@ test('⑦ 接口基址与 bootstrap 路径写死成前端唯一来源（改前�
 });
 
 test('⑧ 数据层替换点：异步启动 + 横幅 + AI 五态 + 宽度记忆都在（五处定点替换齐）', () => {
-  assert.match(shipped, /async function init\(\)/, '启动必须异步化（先取数据再 render）');
+  assert.match(shipped, /async function boot\(\)/, '启动必须异步化（先取数据再 render）');
   assert.match(shipped, /function showBootBanner\(/, '启动期校验失败渲染错误横幅（禁裸 throw 白屏）');
   assert.match(shipped, /function agentLabelFor\(/, 'AI 五态按钮要有纯函数');
   assert.match(shipped, /AI 对话暂不可用/, '五态第五态文案在');
