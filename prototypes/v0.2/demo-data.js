@@ -939,7 +939,7 @@ const DEMO_DATA = {
       ],
       "decisions": [
         {
-          "topic": "把材料整理的进展同步给子女的时机",
+          "topic": "把材料整理的进度同步给子女的时机",
           "status": "discussed",
           "note": "10 月家宴上说过一次，女儿主动接手了档案查询"
         },

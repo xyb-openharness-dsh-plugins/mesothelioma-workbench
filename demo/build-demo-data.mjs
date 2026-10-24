@@ -11,15 +11,14 @@
  *          BAP1 未检测 / 间皮素检测 → 培美曲塞+顺铂第 3 周期 + 胸穿×2（600/800ml）+
  *          滑石粉胸膜固定术 → mMRC 1→2 → 石棉暴露段（1983-1998 造船厂）→ 材料 4/9 项。
  *   DEMO-2 李桂芳（演示）58 女 · 双免路径照护者代记：双免第 6 周（反应模式原文
- *          "irRECIST 未确认进展待评"）→ CT 并列 2 次 → mMRC 2→3 → 弯路 2 段（基层误诊肺炎）→
+ *          iRECIST 评估原文引述）→ CT 并列 2 次 → mMRC 2→3 → 弯路 2 段（基层误诊肺炎）→
  *          材料 6/9 项 → 照护者 private 记录（含"赔偿分歧"主题）+ 证言人授权演示（默认 private）。
  *
  * 演示律（D7）：化验/体征 2–4 周一点延续到今天；CT 按真实频率不加密。
  * 双主体：DEMO-1 患者自记为主（primaryRole=PATIENT），DEMO-2 照护者代记为主（CAREGIVER）。
  * 数据为合成演示，人物与数值不指向任何真实患者；试验条目取自真实登记库样例（登记状态，未核实）。
- * 红线：本文件不含判读字段；"进展"只出现在报告/评估原文引用字段（excerpt/src 类）；
- *      无禁词（建议治疗/可能复发/可以停药/无需就医/推荐方案/治愈率/生存率）；
- *      材料相关文案零法律建议。
+ * 红线：本文件不含判读字段；影像评估语（iRECIST 等）只出现在报告/评估原文引用字段
+ *      （excerpt/src 类）；无 PROTOTYPE-BRIEF §6 禁词表七族词；材料相关文案零法律建议。
  */
 
 import { writeFileSync, mkdirSync } from 'node:fs';
@@ -179,7 +178,7 @@ function buildProfile1() {
       { d: '2026-10-09', author: 'CAREGIVER', topic: '家事安排', content: '复诊当天女儿请假陪去，我提前把想问的写在纸上', visibility: 'private', witnessed: false },
     ],
     decisions: [
-      { topic: '把材料整理的进展同步给子女的时机', status: 'discussed', note: '10 月家宴上说过一次，女儿主动接手了档案查询' },
+      { topic: '把材料整理的进度同步给子女的时机', status: 'discussed', note: '10 月家宴上说过一次，女儿主动接手了档案查询' },
       { topic: '如果以后需要长期照护安排，想和谁先谈', status: 'open', note: null },
     ],
     rhythm: [

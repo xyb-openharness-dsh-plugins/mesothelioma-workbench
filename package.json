@@ -23,7 +23,11 @@
     "check": "node --check dsh/index.js && node --check lib/client.js && node scripts/check-workbench-package.mjs .",
     "audit": "node scripts/check-conformance.mjs .",
     "release:check": "npm run check && npm run audit",
-    "pack:check": "npm pack --dry-run"
+    "pack:check": "npm pack --dry-run",
+    "probe:resp": "node scripts/probe-responsive.mjs",
+    "probe:proto": "node scripts/probe-proto.mjs",
+    "check:hvt": "node scripts/check-hvt.mjs",
+    "demo:data": "node demo/build-demo-data.mjs"
   },
   "dsh": {
     "bundle": {
