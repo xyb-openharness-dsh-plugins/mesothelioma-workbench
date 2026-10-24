@@ -72,22 +72,53 @@ export function apply(ctx, config = {}) {
 
   let source = null
   let failure = null
-  try {
-    source = openDataSource(config.root)
-  } catch (error) {
-    failure = error.message
+  let lastTry = Number.NEGATIVE_INFINITY
+
+  /* 开库失败**不锁死到进程生命周期**（小甲宝 0.3.0 真机踩过：宿主进程是装包之前启动的，
+     只在加载时试一次的话，用户装好新包、重开工作台看到的永远是同一句「打不开数据库」）。
+     这里改成懒重试：每次请求前若还没有数据源就再试一次，1s 防抖避免坏盘时空转。 */
+  function ensureSource() {
+    if (source) return source
+    const now = Date.now()
+    if (now - lastTry < 1000) return null
+    lastTry = now
+    try {
+      source = openDataSource(config.root)
+      failure = null
+    } catch (error) {
+      source = null
+      failure = error.message
+    }
+    return source
   }
 
+  // 启动时仍先试一次：绝大多数情况目录/库都正常，热路径上不要再进防抖分支
+  ensureSource()
+
+  /* 路由层拿到的是一个**代理**：方法每次调用时才去要数据源，`db` 用 getter。
+     这样数据源自愈后不用重建 handler，也就没有"重试了但路由还拿着旧的空壳"这种半死状态。 */
   const api = createApiHandler({
-    source: source ?? {
-      db: null,
-      bootstrap: () => { throw new Error(failure) },
-      profile: () => null,
+    source: {
+      get db() {
+        const current = ensureSource()
+        if (!current) throw new Error(failure || '数据源尚未就绪')
+        return current.db
+      },
+      bootstrap: () => {
+        const current = ensureSource()
+        if (!current) throw new Error(failure || '数据源尚未就绪')
+        return current.bootstrap()
+      },
+      profile: (key, opts) => {
+        const current = ensureSource()
+        return current ? current.profile(key, opts) : null
+      },
     },
     version,
     build,
     serveUi: (req, res, urlPath) => servePublic(req, res, urlPath),
-    failure,
+    // 传函数而不是字符串：/health 与 503 分支每次请求重新取值（见 routes.js 的 failureOf）
+    failure: () => failure,
   })
 
   const handler = (req, res) => {

@@ -50,25 +50,31 @@ function readBody(req, limit = MAX_UPLOAD_BYTES) {
  * @param {string} opts.version
  * @param {string} opts.build
  * @param {(req:object,res:object,path:string)=>boolean} opts.serveUi 静态文件出口（两条链路的 public/ 定位不同）
- * @param {string|null} [opts.failure] 数据源打不开的原因；非空时除 /health 外一律 503
+ * @param {string|null|(()=>string|null)} [opts.failure] 数据源打不开的原因；非空时除 /health 外一律 503。
+ *   **允许传函数**：宿主进程常在装包之前就启动了，插件若把"打不开"定死成构造时的一个字符串，
+ *   用户装好新包、只重开工作台时看到的永远是同一句错（小甲宝 0.3.0 真机踩过）。传函数则每次
+ *   请求重新取值，数据源自愈后错误自然消失。
  */
 export function createApiHandler({ source, version, build, serveUi, failure = null }) {
+  /* 一次取值，按请求求值：failure 可以是字符串（老调用方式）或函数（懒重试）。 */
+  const failureOf = () => (typeof failure === 'function' ? failure() : failure)
   return async function handle(req, res) {
     const url = new URL(req.url, 'http://127.0.0.1')
     const path = url.pathname
+    const why = failureOf()
 
     if (path === `${API_PREFIX}/health`) {
       if (req.method !== 'GET') return sendJson(res, 405, { error: 'method_not_allowed' })
       return sendJson(res, 200, {
-        ok: !failure, version, build, apiVersion: 'v1', ui: UI_PREFIX,
+        ok: !why, version, build, apiVersion: 'v1', ui: UI_PREFIX,
         capabilities: ['bootstrap', 'profile', 'import', 'candidate', 'mineru-settings'],
-        error: failure || undefined,
+        error: why || undefined,
       })
     }
 
     /* 数据源打不开：/health 已经报了原因，其它接口统一 503，不假装返回空数据。 */
-    const unavailable = (res2) => sendJson(res2, 503, { error: 'bootstrap_unavailable', message: failure })
-    if (failure && path !== `${API_PREFIX}/health` && !(path === UI_PREFIX || path.startsWith(`${UI_PREFIX}/`))) return unavailable(res)
+    const unavailable = (res2) => sendJson(res2, 503, { error: 'bootstrap_unavailable', message: why })
+    if (why && path !== `${API_PREFIX}/health` && !(path === UI_PREFIX || path.startsWith(`${UI_PREFIX}/`))) return unavailable(res)
 
     if (path === `${API_PREFIX}/bootstrap`) {
       if (req.method !== 'GET') return sendJson(res, 405, { error: 'method_not_allowed' })

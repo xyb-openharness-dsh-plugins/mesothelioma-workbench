@@ -12,7 +12,7 @@
    影像评估语（iRECIST 等）只随报告/评估原文引用出现。 */
 
 const APP_INFO = {
-  version: '0.1.3',
+  version: '0.1.4',
   build: '2026-10-24',
   channel: 'dsh',
   channelLabel: '开发版 · 已连接工作台数据',
