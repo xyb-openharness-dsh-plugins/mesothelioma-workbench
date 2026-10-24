@@ -18,3 +18,6 @@
 
 HTML原型关口：路径/版本/hash、实际预览证据、用户确认范围/原话/日期；未确认则业务开发待开始。
 数据演进关口：SCHEMA变化矩阵、领域/流程/读模型边界、兼容与迁移未决项。
+
+
+**G1 签认记录（2026-10-24）**：签认包 = SPEC v0.1 + SCENARIOS（S01–S17）+ PATIENT-FLOW + DIFF-MATRIX（10 线 30 页签，cervical 重名率 20%）+ USER-RESEARCH + INTERACTION-DESIGN v1 + DEV-REQUIREMENTS-2026-10-24 + PROTOTYPE-BRIEF。**确认人：samqin123（用户），原话"G1确认"，渠道会话**。确认范围：① 页面树 10 线 30 页签（含三个结构决策点按草案：弯路并入疾病本体 / 照护与生活 L6+L7 合并 / 一图秀独立页）② 品牌占位「小胸宝 PleuraPal」+ 深海蓝 #33608C ③ 双主体并重 / 全病程 / MinerU 接入（默认值转正式）④ 二期边界 S14–S17 不进一期。零法律建议与工友证言专项授权升级为 G1 级红线。
