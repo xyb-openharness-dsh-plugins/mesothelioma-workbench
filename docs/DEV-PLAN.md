@@ -10,8 +10,8 @@
 | M2 原型 | demo 构建器（双主体两档案）+ schema 草案 + prototypes/v0.2（含窄宽规则）+ 无头走查 + **HVT X1–X4** | ✅ 2026-10-24（G2 签，原话「G2确认ok」· 提交 0ecb342） | **G2** |
 | M3 数据模型 | schema/0001 冻结（sha256 + 判读列断言） | ✅ 2026-10-24（G3 冻结：27 表内存实测 + 判读列断言 PASS · sha256 `eec1589a…` · 提交 4c31292） | **G3** |
 | M4 临床库 | 在线通道采集 2026 MPM 试验 → research/mesothelioma-cancer/ | ⏳（采集可与 M1 并行） | — |
-| M5 开发版 | dsh 七步（含真客户端链路 src→build→lib）+ MinerU 六部件 + apiBase 定稿契约 + check 全绿 + HVT 一致性 | ⏳ | V1 |
-| M6 装机 | pack（**改包必升版**）→ tgz 四要素对照 → pnpm 装 → 宿主信号 + 真机走查 | ⏳ | V2/V3 |
+| M5 开发版 | 同左 | ✅ 2026-10-24（v0.1.1，check 43/43+audit 37/37，并行交付合流 c33f3a9） | V1 ✅ |
+| M6 装机 | 同左 | 🔶 包级已装（四要素+占位=0+bundles 登记）；V2/V3 真机走查待用户 | V2/V3 |
 | M7 发布 | tag/release + 经验回流 starter | ⏳ | — |
 
 ## 闸口签认留痕（2026-10-24 补记）

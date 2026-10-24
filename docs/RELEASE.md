@@ -23,3 +23,15 @@ README/许可证/素材来源/运行依赖/更新说明：...
 回滚步骤/数据兼容检查/已知限制：...
 
 工作台市场发布另按 docs/10-MARKET-PUBLISHING.md 执行，附 templates/MARKET-ACCEPTANCE.md 的指定版本手工确认。官方指南复核日期/来源：... 最终安装来源：... 用户确认的项目与执行者：... PR URL/最新提交检查实际执行结果：... 市场目录可见与可安装证据：...。未授权投稿时标不适用，不把 Git push 当市场发布。
+
+## 0.1.1 装机记录（M6 · 2026-10-24）
+
+| 项 | 值 |
+| --- | --- |
+| tgz | `release/xyb-community-mesothelioma-workbench-0.1.1.tgz`（3.6MB/42 文件，sha256 `cbc496d3…edcb0cac`，npm shasum 49e64156） |
+| 四要素对照（tgz 内容） | H1 dsh 块+repository ✅ / H2 config.root ✅ / H3 **lib/client.js 占位=0**（src→build 链路产物 489 行）✅ / H4 版本同源 v0.1.1 ✅ |
+| 安装 | `NODE_OPTIONS= corepack pnpm remove/add -w --save-exact file:…0.1.1.tgz`（+1 包 4.8s） |
+| 五要素 | 装机副本 version/dsh 块/file 依赖/占位=0 ✅ + bundles 手动登记（乳腺首装实录约定；用户 UI 添加后宿主接管） |
+| M5 交付 | check 43/43 全绿、audit 37/37、HVT X1–X4 一致、窄宽 80 组合 0 问题；**并行会话同仓交付 f3b16eb + 主线 4 处修复合流**（c33f3a9） |
+| **UI 加载/业务验证（V2/V3）** | **未验证**——待用户重启 dsh-desktop → 添加工作台 → 核心流程走查 |
+| 挂账 | schema/0002（7 表+29 列，sha256 90128eec）**待用户追认**；MinerU 真实 Token 线上实测未做 |
