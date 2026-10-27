@@ -2,6 +2,32 @@
 
 只增不删；每条写清"改了什么 + 为什么 + 用户可见结果"。版本号与 VERSION、package.json 三处必须一致。
 
+## 0.1.5 — 2026-10-27
+
+**36 号 v2 补齐（指南可点 + 状态卡）**。按 `docs/36-DISEASE-PRIMER.md` §2.1/§2.5/§2.6 补齐，全部实测。
+
+- **模式层同步**：`prototypes/v0.2/primer.js`、`primer.css` 覆盖为 starter
+  `assets/patterns/disease-primer.js/.css` 最新版（含 `sourceLine` 链接渲染与 `{text,url}` 表格单元格）；
+  §2.5 缺链接行现在渲染红色「缺链接，违反 36 号 §2.5」标记。
+- **指南原件可点**：`primer-data.js` 共 21 个链接位点（4 段 sources 16 处 + evidence 表「原件」列 5 行，
+  其中 nolink 1 处），全部 `https://` 且逐条用 `verify-links.mjs` 真浏览器验活 OK：
+  卫健委 2025（壹生转载页）、中华医学会 2021（中华肿瘤杂志全文 43(04):383-394）、
+  NCCN 患者版 Pleural Mesothelioma 2026、NCCN 临床版详情页、SEER/AJCC 分期教学页、
+  BMS 中国双免疫获批新闻稿、FDA 2024-09-17 帕博利珠单抗批准公告。
+- **未取得原件的如实标注**：NCCN 临床版 V2.2025 仍需注册登录（挂官方详情页）；
+  AJCC 第 8 版手册全文未取得（挂 SEER 二次来源）；本项目登记快照是本机
+  `research/mesothelioma-cancer/manifest.json`，无公网 URL → `nolink:true` + note，**未编造链接**。
+- **看板状态卡（§2.6 四件）**：看板首卡由 `.stage-strip` 改为 `病程状态卡`——
+  卡头 `D+N 状态卡 · 距第 4 周期 D1 2 天`／大字 `第 180 天`（锚点＝确诊日 `2026-04-28` 为 Day 0，
+  自动派生，不手填）／现状行（阶段原文 + 状态 + `下次：2026.10.26（第 4 周期 D1）`）／出口按钮排
+  （主：看治疗日历（按天）；副：疾病概要：恶性胸膜间皮瘤是什么？→ 打开浮窗）。
+  无锚点日时整卡显示「待初始化」并指向三步（登记确诊日 → 核对病理原文 → 回看板生成天数）。
+- **入口落到开发版**：`public/` 同步 primer 三件套（`primer.js/.css/primer-data.js`）与顶栏「?」，
+  `public/app.js`、`public/style.css`、`public/index.html` 与原型保持 parity（ui-parity 8/8 PASS）。
+- **闸门**：新增 `scripts/check-primer-links.mjs` 并接进 `npm run check` 末尾。
+  实测：链接断言 21/21、探针 9/9 PASS（端口 8127）、`npm run check` 退出码 0（单测 44/44）。
+- 未完成：装机副本刷新与真机抽查（需宿主）。
+
 ## 0.1.4 — 2026-10-24
 
 - **修复：开库失败后不再锁死到进程生命周期**。0.1.2 加了 `mkdirSync`，但 `apply()` 仍只在

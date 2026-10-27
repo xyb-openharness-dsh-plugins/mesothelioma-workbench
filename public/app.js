@@ -12,7 +12,7 @@
    影像评估语（iRECIST 等）只随报告/评估原文引用出现。 */
 
 const APP_INFO = {
-  version: '0.1.4',
+  version: '0.1.5',
   build: '2026-10-24',
   channel: 'dsh',
   channelLabel: '开发版 · 已连接工作台数据',
@@ -590,8 +590,48 @@ function pageDash() {
     <div class="task-grid">${entries.map(([g, t2, d, page, sub, scene]) => `<button class="task-entry" data-action="go" data-page="${page}" data-sub="${sub}" data-scene="${scene}">
       <span class="entry-icon">${g}</span><b>${esc(t2)}</b><span>${esc(d)}</span><span class="arrow">→</span></button>`).join('')}</div></div>`;
   const recentCards = state.sel[state.profileId].filter((c) => c !== 'MMRC').slice(0, 2);
+  /* 36 号 §2.6 病程状态卡四件：卡头 eyebrow / 大字天数（锚点派生，不手填）/ 现状行 / 出口按钮排 */
+  const anchorDate = p.pathology?.biopsyDate || '';
+  const dayN = anchorDate ? daysBetween(anchorDate, TODAY) + 1 : null;
+  const nextRaw = t.nextOn || '';
+  const nextDate = (nextRaw.match(/\d{4}-\d{2}-\d{2}/) || [''])[0];
+  const nextItem = ((nextRaw.match(/（(.+?)）/) || [])[1] || '下次治疗').split('，')[0];
+  const daysToNext = nextDate ? daysBetween(TODAY, nextDate) : null;
+  const stageState = t.pathway === 'CHEMO' ? '化疗周期进行中（以医嘱原文为准）' : '双免疫疗程进行中（以医嘱原文为准）';
+  const primerBtn = `<button class="soft" data-primer-open aria-label="疾病概要：定义、医学资料与指南情况、治疗全景、发展趋势">疾病概要：恶性胸膜间皮瘤是什么？</button>`;
+  const statusCard = anchorDate && dayN !== null ? `
+    <section class="status-card" data-product="病程状态卡" aria-label="病程状态卡">
+      <div class="sc-head">
+        <span class="eyebrow">D+${dayN} 状态卡 · 距${esc(nextItem)}${daysToNext !== null ? ` ${daysToNext} 天` : ''}</span>
+        <span class="sc-anchor">锚点：确诊日 ${longDate(anchorDate)} · Day 0</span>
+      </div>
+      <div class="sc-main">
+        <div class="sc-day"><b>第 ${dayN} 天</b><span>由确诊日自动计算，不手填</span></div>
+        <div class="sc-now">
+          <p class="sc-stage">${esc(p.stageLine)}</p>
+          <p class="sc-state"><b>状态</b>${esc(stageState)}${nextDate ? ` · <b>下次</b>：${longDate(nextDate)}（${esc(nextItem)}）` : ''}</p>
+        </div>
+      </div>
+      <div class="actions sc-actions">
+        ${go('看治疗日历（按天）→', 'treatment', 'calendar', 'primary')}
+        ${primerBtn}
+      </div>
+    </section>` : `
+    <section class="status-card pending" data-product="病程状态卡" aria-label="病程状态卡">
+      <div class="sc-head"><span class="eyebrow">状态卡 · 待初始化</span><span class="sc-anchor">没有锚点日，天数不手填</span></div>
+      <div class="sc-main">
+        <div class="sc-day"><b>待初始化</b><span>锚点：确诊日（待登记）</span></div>
+        <div class="sc-now">
+          <p class="sc-state"><b>三步</b>①在「我的瘤与弯路 · 病理三型」登记确诊日 → ②核对病理报告原文 → ③回看板生成「第 N 天」与下次日期</p>
+        </div>
+      </div>
+      <div class="actions sc-actions">
+        ${go('去登记确诊日 →', 'tumor', 'pathology', 'primary')}
+        ${primerBtn}
+      </div>
+    </section>`;
   return `${head('看板', SUBTITLES.dash, aiBtn())}
-    <div class="stage-strip"><span class="eyebrow">当前阶段 · 引用医生语境</span><b>${esc(p.stageLine)}</b><small>${esc(p.diagnosis)} · ${p.age} 岁 · 演示数据</small></div>
+    ${statusCard}
     <div class="duo">${duo('本人 · 现在可以做', 'self', selfEntries)}${duo('照护者 · 现在可以做', 'care', careEntries)}</div>
     <div class="scene-strip" aria-label="13 个场景直达（演示导航）"><span class="lab">场景直达：</span>${SCENES.map(([k, n]) => `<button class="scene-chip" data-action="scene" data-scene="${k}" aria-label="场景 ${k} ${n}">${k} ${n}</button>`).join('')}</div>
     <div class="change-strip" data-product="特色状态卡">

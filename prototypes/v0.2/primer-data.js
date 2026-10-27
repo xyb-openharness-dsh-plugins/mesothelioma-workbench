@@ -2,6 +2,18 @@
  * 只写解释层：定义、文件、指南列出的手段、已经发生的版本与登记事实。
  * 规范：docs/36-DISEASE-PRIMER.md；本项目实例清单：docs/DISEASE-PRIMER.md
  */
+/* 36 号 §2.5：以下链接均经 verify-links.mjs 真浏览器验活（OK），不编 URL。 */
+const SRC_URL = {
+  nhcNotice: 'https://www.nhc.gov.cn/yzygj/c100068/202507/5b3f41180a42465eb9eec34597bacaf2.shtml',
+  yisheng: 'https://cmtopdr.com/post/detail/e442849c-d29a-4042-b280-d4c765d84714',
+  cma2021: 'https://rs.yiigle.com/cmaid/1317068',
+  nccnPatient: 'https://www.nccn.org/patientresources/patient-resources/guidelines-for-patients/guidelines-for-patients-details?patientGuidelineId=19',
+  nccnDetail: 'https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1512',
+  seerAjcc: 'https://training.seer.cancer.gov/staging/systems/ajcc.html',
+  bms: 'https://www.bms.com/cn/media/press-release-listing/08302020.html',
+  fda: 'https://www.fda.gov/drugs/resources-information-approved-drugs/fda-approves-pembrolizumab-chemotherapy-unresectable-advanced-or-metastatic-malignant-pleural'
+}
+
 window.DISEASE_PRIMER = {
   brand: '小胸宝 PleuraPal',
   name: '恶性胸膜间皮瘤',
@@ -21,9 +33,9 @@ window.DISEASE_PRIMER = {
         '本台只整理胸膜型。腹膜型、心包型、睾丸鞘膜型各有自己的路径，不套用这一套分期与治疗模板：AJCC 第 8 版为胸膜与腹膜各设一套 TNM，两套不互相套用，也不换算。'
       ],
       sources: [
-        { org: '国家卫生健康委员会', doc: '恶性胸膜间皮瘤诊疗指南（2025 版）', version: '2025-08', original: false, page: '页码待核', note: '壹生转载页，非原始 PDF' },
-        { org: '中华医学会肿瘤学分会', doc: '中国恶性胸膜间皮瘤临床诊疗指南（2021 版）', version: '2021', original: true, page: '页码待核' },
-        { org: 'AJCC', doc: 'AJCC Cancer Staging Manual', version: '第 8 版（2017）', original: false, page: '页码待核' }
+        { org: '国家卫生健康委员会', doc: '恶性胸膜间皮瘤诊疗指南（2025 版）', version: '2025-08', original: false, page: '页码待核', secondaryUrl: SRC_URL.yisheng, note: '壹生转载页，非原始 PDF；官方通知页 ' + SRC_URL.nhcNotice },
+        { org: '中华医学会肿瘤学分会', doc: '中国恶性胸膜间皮瘤临床诊疗指南（2021 版）', version: '2021', original: true, page: '页码待核', url: SRC_URL.cma2021 },
+        { org: 'AJCC', doc: 'AJCC Cancer Staging Manual', version: '第 8 版（2017）', original: false, page: '页码待核', secondaryUrl: SRC_URL.seerAjcc, note: '手册全文未取得，据 SEER 教学页的分期体系说明' }
       ]
     },
     {
@@ -33,11 +45,11 @@ window.DISEASE_PRIMER = {
       table: {
         head: ['机构', '文件', '版本 / 日期', '原件', '本台的用途'],
         rows: [
-          ['国家卫生健康委员会', '恶性胸膜间皮瘤诊疗指南（2025 版）', '2025-08', '未取得原件（壹生转载页）', '一线化疗、双免疫的获批口径、二线清单、手术争议、贝伐的 NMPA 状态'],
-          ['中华医学会肿瘤学分会', '中国恶性胸膜间皮瘤临床诊疗指南（2021 版）', '2021', '已取得全文要点', '期别分组表、手术界限、后线用药细则、免疫二线研究'],
-          ['NCCN', 'NCCN Guidelines for Patients: Pleural Mesothelioma', '2026（基于临床版 V2.2026，2025-10-03）', '已取得（42 页 PDF）', '患者语言的分期解释、治疗选项清单、胸水处理、临床试验说明'],
-          ['NCCN', 'NCCN Guidelines: Mesothelioma: Pleural', 'V2.2025（2025-01-14）', '未取得（需注册登录）', '仅作版本参照，不引条文与页码'],
-          ['AJCC', 'AJCC Cancer Staging Manual', '第 8 版（2017）', '未取得', '分期字段口径（本项目经二次来源引用）']
+          ['国家卫生健康委员会', '恶性胸膜间皮瘤诊疗指南（2025 版）', '2025-08', { text: '未取得原件（壹生转载页）', url: SRC_URL.yisheng }, '一线化疗、双免疫的获批口径、二线清单、手术争议、贝伐的 NMPA 状态'],
+          ['中华医学会肿瘤学分会', '中国恶性胸膜间皮瘤临床诊疗指南（2021 版）', '2021', { text: '已取得全文', url: SRC_URL.cma2021 }, '期别分组表、手术界限、后线用药细则、免疫二线研究'],
+          ['NCCN', 'NCCN Guidelines for Patients: Pleural Mesothelioma', '2026（基于临床版 V2.2026，2025-10-03）', { text: '已取得（2026 患者版，42 页 PDF）', url: SRC_URL.nccnPatient }, '患者语言的分期解释、治疗选项清单、胸水处理、临床试验说明'],
+          ['NCCN', 'NCCN Guidelines: Mesothelioma: Pleural', 'V2.2025（2025-01-14）', { text: '未取得（需注册登录）', url: SRC_URL.nccnDetail }, '仅作版本参照，不引条文与页码'],
+          ['AJCC', 'AJCC Cancer Staging Manual', '第 8 版（2017）', { text: '未取得（据 SEER 教学页二次来源）', url: SRC_URL.seerAjcc }, '分期字段口径（本项目经二次来源引用）']
         ]
       },
       points: [
@@ -46,9 +58,9 @@ window.DISEASE_PRIMER = {
         '两套分期语言并存：AJCC/IMIG 的 TNM 与 ⅠA–Ⅳ，以及 Mesothelioma UK 的四期患者版描述。本表不做换算。'
       ],
       sources: [
-        { org: '国家卫生健康委员会', doc: '恶性胸膜间皮瘤诊疗指南（2025 版）', version: '2025-08', original: false, page: '页码待核' },
-        { org: '中华医学会肿瘤学分会', doc: '中国恶性胸膜间皮瘤临床诊疗指南（2021 版）', version: '2021', original: true, page: '页码待核' },
-        { org: 'NCCN', doc: 'NCCN Guidelines for Patients: Pleural Mesothelioma', version: '2026', original: true, page: '页码待核' }
+        { org: '国家卫生健康委员会', doc: '恶性胸膜间皮瘤诊疗指南（2025 版）', version: '2025-08', original: false, page: '页码待核', secondaryUrl: SRC_URL.yisheng, note: '壹生转载页，非原始 PDF' },
+        { org: '中华医学会肿瘤学分会', doc: '中国恶性胸膜间皮瘤临床诊疗指南（2021 版）', version: '2021', original: true, page: '页码待核', url: SRC_URL.cma2021 },
+        { org: 'NCCN', doc: 'NCCN Guidelines for Patients: Pleural Mesothelioma', version: '2026', original: true, page: '页码待核', url: SRC_URL.nccnPatient }
       ]
     },
     {
@@ -95,10 +107,10 @@ window.DISEASE_PRIMER = {
         '以上是文献与指南里列出的手段，按病期与线序排列，不代表任何一项适合你。选哪一个，这一句需要问你的医生。'
       ],
       sources: [
-        { org: '国家卫生健康委员会', doc: '恶性胸膜间皮瘤诊疗指南（2025 版）', version: '2025-08', original: false, page: '页码待核' },
-        { org: '中华医学会肿瘤学分会', doc: '中国恶性胸膜间皮瘤临床诊疗指南（2021 版）', version: '2021', original: true, page: '页码待核' },
-        { org: 'NCCN', doc: 'NCCN Guidelines for Patients: Pleural Mesothelioma', version: '2026', original: true, page: '页码待核' },
-        { org: '百时美施贵宝中国', doc: '双免疫获 NMPA 批准的新闻稿', version: '落款 2021-06-11', original: false, page: '不适用', note: '批准日期与其他来源存在矛盾，待 NMPA 公示核验' }
+        { org: '国家卫生健康委员会', doc: '恶性胸膜间皮瘤诊疗指南（2025 版）', version: '2025-08', original: false, page: '页码待核', secondaryUrl: SRC_URL.yisheng, note: '壹生转载页，非原始 PDF' },
+        { org: '中华医学会肿瘤学分会', doc: '中国恶性胸膜间皮瘤临床诊疗指南（2021 版）', version: '2021', original: true, page: '页码待核', url: SRC_URL.cma2021 },
+        { org: 'NCCN', doc: 'NCCN Guidelines for Patients: Pleural Mesothelioma', version: '2026', original: true, page: '页码待核', url: SRC_URL.nccnPatient },
+        { org: '百时美施贵宝中国', doc: '双免疫获 NMPA 批准的新闻稿', version: '落款 2021-06-11', original: false, page: '不适用', secondaryUrl: SRC_URL.bms, note: '批准日期与其他来源存在矛盾，待 NMPA 公示核验' }
       ]
     },
     {
@@ -113,12 +125,12 @@ window.DISEASE_PRIMER = {
         '指南结构：2025 版由国家卫健委以罕见病诊疗指南形式印发（2025-08），与中华医学会 2021 版并行；本次检索未见 CSCO 间皮瘤专项指南。'
       ],
       sources: [
-        { org: 'NCCN', doc: 'NCCN Guidelines for Patients: Pleural Mesothelioma', version: '2026（基于 V2.2026，2025-10-03）', original: true, page: '页码待核' },
-        { org: 'NCCN', doc: 'NCCN Guidelines: Mesothelioma: Pleural', version: 'V2.2025（2025-01-14）', original: false, page: '页码待核', note: '全文需注册登录，未取得' },
-        { org: '百时美施贵宝中国', doc: '双免疫 NMPA 获批新闻稿', version: '2021-06-11', original: false, page: '不适用', note: '批准日期待核验' },
-        { org: 'FDA', doc: 'pembrolizumab + chemotherapy 批准公告（KEYNOTE-483）', version: '2024-09-17', original: true, page: '不适用' },
-        { org: '本项目登记快照', doc: 'research/mesothelioma-cancer/manifest.json（unified-trial-mcp）', version: '2026-10-24', original: true, page: '不适用', note: '28 条去重，阶段字段未采集' },
-        { org: '国家卫生健康委员会', doc: '恶性胸膜间皮瘤诊疗指南（2025 版）', version: '2025-08', original: false, page: '页码待核' }
+        { org: 'NCCN', doc: 'NCCN Guidelines for Patients: Pleural Mesothelioma', version: '2026（基于 V2.2026，2025-10-03）', original: true, page: '页码待核', url: SRC_URL.nccnPatient },
+        { org: 'NCCN', doc: 'NCCN Guidelines: Mesothelioma: Pleural', version: 'V2.2025（2025-01-14）', original: false, page: '页码待核', secondaryUrl: SRC_URL.nccnDetail, note: '全文需注册登录，未取得' },
+        { org: '百时美施贵宝中国', doc: '双免疫 NMPA 获批新闻稿', version: '2021-06-11', original: false, page: '不适用', secondaryUrl: SRC_URL.bms, note: '批准日期待核验' },
+        { org: 'FDA', doc: 'pembrolizumab + chemotherapy 批准公告（KEYNOTE-483）', version: '2024-09-17', original: true, page: '不适用', url: SRC_URL.fda },
+        { org: '本项目登记快照', doc: 'research/mesothelioma-cancer/manifest.json（unified-trial-mcp）', version: '2026-10-24', original: true, page: '不适用', nolink: true, note: '自采快照存于本机仓库，无公网 URL；28 条去重，阶段字段未采集' },
+        { org: '国家卫生健康委员会', doc: '恶性胸膜间皮瘤诊疗指南（2025 版）', version: '2025-08', original: false, page: '页码待核', secondaryUrl: SRC_URL.yisheng, note: '壹生转载页，非原始 PDF' }
       ]
     }
   ]
